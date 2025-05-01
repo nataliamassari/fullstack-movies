@@ -1,41 +1,57 @@
-import Image from "next/image";
-import { TextField, InputAdornment } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
-import {Button, Stack} from "@mui/material";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import { Button, Stack, Grid } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
 import { MovieContext } from "@/contexts/movieContext";
 import { useContext } from "react";
-import { Key } from "@mui/icons-material";
 
 export default function MoviesList() {
-    const { movie } = useContext(MovieContext)
-    const filmsToShow = movie ? movie.description.slice(0, 5) : [];
+  const { state } = useContext(MovieContext);
+  const filmsToShow = Array.isArray(state.movies?.description)
+    ? state.movies.description
+    : [];
 
-    return (
-      <Stack flexDirection={'row'} flexWrap="wrap" gap={2}>
-          {filmsToShow.length > 0 ? filmsToShow.map((film, index) => (
-              <Card sx={{ minWidth: 275 }} key={index}>
-                  <CardContent>
-                      <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-                          {film['#YEAR']}
-                      </Typography>
-                      <Typography variant="h5" component="div">
-                          {film['#TITLE']}
-                      </Typography>
-                      <Typography variant="body2">
-                          {film['#ACTORS']}
-                      </Typography>
-                  </CardContent>
-                  <CardActions>
-                      <Button size="small">AVALIAR</Button>
-                  </CardActions>
+  return (
+    <Stack
+      flexDirection={"column"}
+      justifyContent={"center"}
+      padding={5}
+    >
+      <Grid container spacing={2} justifyContent="center">
+        {filmsToShow.length > 0 ? (
+          filmsToShow.map((film, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={2} key={index}>
+              <Card sx={{ backgroundColor: "#202020", width: 250, height: 550 }}>
+                <CardMedia
+                  component="img"
+                  height="350px"
+                  image={film["#IMG_POSTER"]}
+                  alt={film["#TITLE"]}
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    sx={{ color: "white", fontSize: 14 }}
+                  >
+                    {film["#YEAR"]}
+                  </Typography>
+                  <Typography variant="h5" component="div" color="white">
+                    {film["#TITLE"]}
+                  </Typography>
+                  <Typography variant="body2" color="white">
+                    {film["#ACTORS"]}
+                  </Typography>
+                </CardContent>
+                <CardActions></CardActions>
               </Card>
-          )) : (
-              <Typography>Nenhum filme encontrado.</Typography>
-          )}
-      </Stack>
+            </Grid>
+          ))
+        ) : (
+          <Typography>Nenhum filme encontrado.</Typography>
+        )}
+      </Grid>
+    </Stack>
   );
 }

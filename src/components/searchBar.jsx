@@ -5,20 +5,24 @@ import { MovieContext } from "@/contexts/movieContext";
 import { useContext, useState } from "react";
 
 export default function SearchBar() {
-  const { setMovie } = useContext(MovieContext);
-  const [searchText, setSearchText] = useState("");
+  const { state, dispatch } = useContext(MovieContext);
 
   const handleSearch = async () => {
+    if (!state.search) {
+      return;
+    }
 
-    const url = `https://imdb.iamidiotareyoutoo.com/search?q=${encodeURIComponent(searchText)}`;
+    const url = `https://imdb.iamidiotareyoutoo.com/search?q=${encodeURIComponent(
+      state.search
+    )}`;
 
     try {
       const response = await fetch(url);
       const data = await response.json();
       if (data) {
-        setMovie(data);
+        dispatch({ type: "SET_MOVIES", payload: data });
       } else {
-        setMovie([]);
+        dispatch([]);
       }
     } catch (error) {
       console.error("Erro ao buscar filmes:", error);
@@ -26,25 +30,33 @@ export default function SearchBar() {
   };
 
   return (
-    <Stack flexDirection={"row"}>
+    <Stack flexDirection={"row"} pr={5} pl={5} pt={5}>
       <TextField
         id="standard-basic"
         label="Pesquisar filme"
-        variant="standard"
         fullWidth
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
+        color="secondary"
+        variant="filled"
+        focused
+        value={state.search}
+        onChange={(e) =>
+          dispatch({ type: "SET_SEARCH", payload: e.target.value })
+        }
+        sx={{ input: { color: "white" } }}
         slotProps={{
           input: {
             startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
+              <InputAdornment
+                position="start"
+                style={{ color: "white", padding: 5 }}
+              >
+                <SearchIcon fontSize="sm" />
               </InputAdornment>
             ),
           },
         }}
       />
-      <Button variant="outlined" onClick={handleSearch}>
+      <Button color="secondary" onClick={handleSearch}>
         Buscar
       </Button>
     </Stack>

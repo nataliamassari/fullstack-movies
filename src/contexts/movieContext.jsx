@@ -1,8 +1,9 @@
-import { createContext } from 'react';
+import { createContext } from "react";
 
 export const MovieContext = createContext({
-  movie: {
-    description: []
+  state: {
+    search: "",
+    movies: {},
   },
-  setMovie: (movie) => [],
+  dispatch: () => {}
 });

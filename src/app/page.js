@@ -1,18 +1,14 @@
 "use client"
-import Image from "next/image";
-import styles from "./page.module.css";
-import SearchBar from "@/components/searchBar";
-import { useState } from "react";
-import { Stack, Paper } from "@mui/material";
+import { useReducer } from "react";
 import { MovieContext } from "@/contexts/movieContext"
-import MoviesList from "@/components/moviesList";
+import { initialState, movieReducer } from "./movieReducer";
+import MainPage from "@/components/mainPage";
 
 export default function Home() {
-  const [movie, setMovie] = useState("")
+  const [state, dispatch] = useReducer(movieReducer, initialState)
   return (
-    <MovieContext.Provider value={{setMovie, movie}}>
-      <SearchBar></SearchBar>
-      <MoviesList></MoviesList>
+    <MovieContext.Provider value={{ state, dispatch}}>
+      <MainPage/>
     </MovieContext.Provider>
   );
 }
